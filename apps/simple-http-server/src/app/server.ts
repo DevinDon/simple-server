@@ -1,6 +1,8 @@
 import { createReadStream } from 'fs';
-import { IncomingMessage, ServerResponse, Server as HttpServer } from 'http';
+import { IncomingMessage, Server as HttpServer, ServerResponse } from 'http';
+import { Server as HttpsServer } from 'https';
 import { join } from 'path';
+import { CERT, KEY } from './cert';
 import { resolvePathType } from './path-resolver';
 import { renderDir } from './template';
 
@@ -9,13 +11,18 @@ export class SimpleServer {
   // 使用文件的 ctime 作为文件的版本号
   private cache: { [key: string]: number; } = {};
 
-  private server: HttpServer;
+  private httpServer: HttpServer;
+  private httpsServer: HttpsServer;
 
   constructor(
     private rootPath: string = __dirname,
     private enableCORS: boolean = true,
   ) {
-    this.server = new HttpServer(this.process.bind(this));
+    this.httpServer = new HttpServer(this.process.bind(this));
+    this.httpsServer = new HttpsServer(
+      { cert: CERT, key: KEY },
+      this.process.bind(this),
+    );
   }
 
   private async process(request: IncomingMessage, response: ServerResponse) {
@@ -59,7 +66,8 @@ export class SimpleServer {
   }
 
   bootstrap() {
-    this.server.listen(8080, () => console.log('[SimpleServer] Server is listening on port 8080'));
+    this.httpServer.listen(8080, () => console.log('[SimpleServer] HTTP Server is listening on port 8080'));
+    this.httpsServer.listen(4343, () => console.log('[SimpleServer] HTTPS Server is listening on port 4343'));
   }
 
 }

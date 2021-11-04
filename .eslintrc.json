@@ -1,0 +1,95 @@
+{
+  "root": true,
+  "env": {
+    "browser": false,
+    "node": true
+  },
+  "ignorePatterns": [],
+  "plugins": [
+    "@nrwl/nx",
+    "@typescript-eslint"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2021,
+    "sourceType": "module"
+  },
+  "rules": {
+    "@nrwl/nx/enforce-module-boundaries": [
+      "error",
+      {
+        "enforceBuildableLibDependency": true,
+        "allow": [],
+        "depConstraints": [
+          {
+            "sourceTag": "*",
+            "onlyDependOnLibsWithTags": [
+              "*"
+            ]
+          }
+        ]
+      }
+    ],
+    "arrow-parens": [
+      "warn",
+      "as-needed"
+    ],
+    "@typescript-eslint/comma-spacing": [
+      "warn",
+      {
+        "before": false,
+        "after": true
+      }
+    ],
+    "@typescript-eslint/comma-dangle": [
+      "error",
+      "always-multiline"
+    ],
+    "curly": [
+      "warn",
+      "all"
+    ],
+    "dot-location": [
+      "warn",
+      "property"
+    ],
+    "no-console": [
+      "warn"
+    ],
+    "@typescript-eslint/quotes": [
+      "warn",
+      "single"
+    ],
+    "quote-props": [
+      "warn",
+      "as-needed"
+    ],
+    "@typescript-eslint/semi": [
+      "error",
+      "always"
+    ],
+    "semi-style": [
+      "warn",
+      "last"
+    ],
+    "@typescript-eslint/no-inferrable-types": [
+      "off"
+    ],
+    "no-unused-vars": [
+      "off"
+    ],
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        "args": "none"
+      }
+    ],
+    "@typescript-eslint/no-empty-function": [
+      "off"
+    ]
+  }
+}

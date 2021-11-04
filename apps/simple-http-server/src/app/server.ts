@@ -10,6 +10,7 @@ export class SimpleServer {
 
   constructor(
     private rootPath: string = __dirname,
+    private enableCORS: boolean = true,
   ) {
     this.server = new HttpServer(this.process.bind(this));
   }
@@ -18,6 +19,12 @@ export class SimpleServer {
 
     const path = join(this.rootPath, request.url ?? '/');
     const pathType = await resolvePathType(path);
+
+    if (this.enableCORS) {
+      response.setHeader('Access-Control-Allow-Origin', '*');
+      response.setHeader('Access-Control-Allow-Methods', '*');
+      response.setHeader('Access-Control-Allow-Headers', '*');
+    }
 
     if (pathType === null) {
       response.statusCode = 404;

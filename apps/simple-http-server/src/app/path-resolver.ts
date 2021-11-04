@@ -15,6 +15,7 @@ export type FileType = {
   extname: string;
   path: string;
   mimeType: string;
+  ctime: number;
 };
 
 export type DirType = {
@@ -52,6 +53,7 @@ export const resolvePathType = async (path: string): Promise<PathType | null> =>
       extname: ext,
       path,
       mimeType: mimeTypeResolver(ext),
+      ctime: state.ctime.getTime(),
     };
   }
 

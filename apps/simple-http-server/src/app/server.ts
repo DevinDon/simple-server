@@ -6,6 +6,9 @@ import { renderDir } from './template';
 
 export class SimpleServer {
 
+  // 使用文件的 ctime 作为文件的版本号
+  private cache: { [key: string]: number; } = {};
+
   private server: HttpServer;
 
   constructor(
@@ -35,10 +38,19 @@ export class SimpleServer {
       response.end(renderDir(pathType));
     } else if (pathType.type === 'file') {
       response.setHeader('Content-Type', pathType.mimeType);
+      response.setHeader('Cache-Control', 'max-age=3600');
       if (pathType.mimeType === 'application/octet-stream') {
         response.setHeader('Content-Disposition', `attachment; filename="${pathType.filename}"`);
       }
-      createReadStream(path).pipe(response);
+      if ((request.headers['cache-control'] ?? '').includes('max-age') && pathType.ctime === this.cache[path]) {
+        response.setHeader('Last-Modified', new Date(this.cache[path]).toUTCString());
+        response.statusCode = 304;
+        response.statusMessage = 'Not Modified';
+        response.end();
+      } else {
+        this.cache[path] = pathType.ctime;
+        createReadStream(path).pipe(response);
+      }
     } else {
       response.statusCode = 500;
       response.end('Not support file type');

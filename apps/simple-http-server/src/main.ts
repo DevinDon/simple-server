@@ -1,1 +1,5 @@
-console.log('Hello World!');
+import { SimpleServer } from './app/server';
+
+const server = new SimpleServer();
+
+server.bootstrap();
